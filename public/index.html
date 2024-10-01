@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H.A.R.D (Hear And React Device)</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-image: url(https://media1.tenor.com/m/gSip2ju1DjMAAAAd/wow-south-park.gif); /* Path to your background image */
+            background-size: contain; /* Ensure the whole picture fits on the screen without cropping */
+            background-position: center; /* Center the background image */
+            background-repeat: no-repeat; /* Prevent the background from repeating */
+        }
+        #ringButton {
+            padding: 20px 40px;
+            font-size: 24px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        #ringButton:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <button id="ringButton">RING <br> LEON</button>
+
+    <script>
+        const ringButton = document.getElementById('ringButton');
+        const ws = new WebSocket('ws://localhost:3000');
+
+        // When the "RING" button is clicked, send a request to the /ringLeon route and play the ringtone
+        ringButton.addEventListener('click', () => {
+            fetch('/ringLeon')
+                .then(response => response.text())
+                .then(data => console.log(data));
+            
+            // Play the ringtone sound
+            const audio = new Audio('ringtone.mp3');
+            audio.play();
+        });
+
+        // Handle incoming WebSocket messages
+        ws.onmessage = function (event) {
+            if (event.data === 'ring') {
+                // Play the ringtone sound
+                const audio = new Audio('ringtone.mp3');
+                audio.play();
+            }
+        };
+    </script>
+</body>
+</html>
